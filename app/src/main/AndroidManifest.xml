@@ -36,11 +36,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.LoginActivity_"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait"/>
         <activity android:name=".Activities.MainActivity_"
+            android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity android:name=".Activities.MessagesActiviry_"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait"></activity>
     </application>
 

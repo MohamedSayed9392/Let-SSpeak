@@ -45,15 +45,6 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16dp" />
 
-                <ImageView
-                    app:srcCompat="@drawable/logout"
-                    android:id="@+id/imLogOut"
-                    android:adjustViewBounds="true"
-                    android:layout_marginRight="16dp"
-                    android:padding="10dp"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp" />
-
             </LinearLayout>
 
             <android.support.v7.widget.Toolbar
@@ -80,15 +71,17 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"  />
 
     <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
-        app:fabSize="mini"
-        app:srcCompat="@drawable/refresh"
-        android:id="@+id/fbRefresh"
+        app:fabSize="normal"
+        app:srcCompat="@drawable/logout"
+        android:id="@+id/fbLogOut"
         app:layout_anchor="@+id/viewPager"
         app:layout_anchorGravity="bottom|left"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_margin="15dp"
-        android:visibility="gone" />
+        android:visibility="visible"
+        android:layout_width="wrap_content" />
+
+
 </android.support.design.widget.CoordinatorLayout>

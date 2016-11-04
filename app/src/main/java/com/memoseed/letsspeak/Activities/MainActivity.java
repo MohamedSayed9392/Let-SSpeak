@@ -37,6 +37,7 @@ import com.memoseed.letsspeak.UTils.UTils;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -59,22 +60,16 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     public static ProgressDialog pD;
 
-    @ViewById
-    public static FloatingActionButton fbRefresh;
-    @Click
-    void fbRefresh(){
-        UTils.recreateActivityCompat(this);
-    }
 
     @ViewById
     TextView txtTitle;
     @ViewById
     TextView txtId;
     @ViewById
-    ImageView imLogOut;
+    FloatingActionButton fbLogOut;
     @Click
-    void imLogOut(){
-        UTils.showProgressDialog("Logging Out",getResources().getString(R.string.pleaseWait),pD);
+    void fbLogOut(){
+        UTils.showProgressDialog(getString(R.string.logging_out),getResources().getString(R.string.pleaseWait),pD);
         ParseUser.logOutInBackground(new LogOutCallback() {
             @Override
             public void done(ParseException e) {
@@ -102,6 +97,21 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    @Override
+    protected void onResume() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(viewPager.getCurrentItem()==0){
+                    ((Chats)mainPagerAdapter.getItem(0)).getChats();
+                }else if(viewPager.getCurrentItem()== 1){
+                    ((Friends)mainPagerAdapter.getItem(1)).getFriends();
+                }
+            }
+        },500);
+        super.onResume();
+    }
+
     @ViewById
     TabLayout tabs;
     @ViewById
@@ -110,6 +120,19 @@ public class MainActivity extends AppCompatActivity {
 
     @AfterViews
     void afterViews(){
+        if(TempValues.regId!=null && !TempValues.regId.isEmpty()){
+            ParseUser.getCurrentUser().put("device_id", TempValues.regId);
+            ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if(e== null){
+                        Log.d(TAG,"GCM id done");
+                    }else{
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
         txtTitle.setText(ParseUser.getCurrentUser().getString("full_name"));
         txtId.setText("id: "+ParseUser.getCurrentUser().getObjectId());
         mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
@@ -136,12 +159,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         viewPager.setCurrentItem(0);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ((Chats)mainPagerAdapter.getItem(0)).getChats();
-            }
-        },1000);
 
     }
 
@@ -201,11 +218,12 @@ public class MainActivity extends AppCompatActivity {
                                     .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                                     .setContentIntent(resultPendingIntent)
                                     .setAutoCancel(true)
+                                    .setGroup("newMessage")
                                     .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
 
                             Notification notification = builder.build();
                             NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                            nm.notify(UTils.createID(), notification);
+                            nm.notify(0, notification);
                         }else if (gcmTitle.contains("newFriend")) {
                             ((Friends)mainPagerAdapter.getItem(1)).getFriends();
                             try {
@@ -223,12 +241,13 @@ public class MainActivity extends AppCompatActivity {
                                         .setContentTitle("New Friend").setContentText(name)
                                         .setStyle(new NotificationCompat.BigTextStyle().bigText(name))
                                         .setContentIntent(resultPendingIntent)
+                                        .setGroup("newFriend")
                                         .setAutoCancel(true)
                                         .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
 
                                 Notification notification = builder.build();
                                 NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                                nm.notify(UTils.createID(), notification);
+                                nm.notify(1, notification);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

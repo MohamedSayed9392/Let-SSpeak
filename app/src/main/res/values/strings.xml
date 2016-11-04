@@ -17,4 +17,5 @@
     <string name="enter_friend_id">Enter Your Friend Id</string>
     <string name="add_friend">Add Friend</string>
     <string name="loading">Loading ...</string>
+    <string name="logging_out">Logging Out</string>
 </resources>

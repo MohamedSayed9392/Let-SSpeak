@@ -5,6 +5,7 @@ package com.memoseed.letsspeak.Fragments;
  */
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.memoseed.letsspeak.Activities.MainActivity;
+import com.memoseed.letsspeak.Activities.SplashActivity;
 import com.memoseed.letsspeak.Adapters.ChatsMainAdapter;
 import com.memoseed.letsspeak.Models.ChatItem;
 import com.memoseed.letsspeak.R;
@@ -69,6 +71,7 @@ public class Chats extends Fragment {
             List<String> list = new ArrayList<>();
             list.add(ParseUser.getCurrentUser().getObjectId());
             query.whereContainedIn("users", list);
+            query.addDescendingOrder("updatedAt");
             query.include("from");
             query.include("to");
             query.findInBackground(new FindCallback<ParseObject>() {
@@ -84,17 +87,18 @@ public class Chats extends Fragment {
                                         object.getString("last_message"),
                                         object.getParseObject("to").getString("full_name"),
                                         object.getParseObject("to").getObjectId(),
-                                        object.getObjectId()));
+                                        object.getObjectId(),
+                                        object.getUpdatedAt()));
                             }else{
                                 chatsMainAdapter.addChat(new ChatItem("",
                                         object.getString("last_message"),
                                         object.getParseObject("from").getString("full_name"),
                                         object.getParseObject("from").getObjectId(),
-                                        object.getObjectId()));
+                                        object.getObjectId(),
+                                        object.getUpdatedAt()));
                             }
 
                         }
-                        MainActivity.fbRefresh.setVisibility(View.GONE);
                         UTils.hideProgressDialog(MainActivity.pD);
                     } else {
                         UTils.hideProgressDialog(MainActivity.pD);
@@ -104,9 +108,21 @@ public class Chats extends Fragment {
                 }
             });
         }else{
-            MainActivity.fbRefresh.setVisibility(View.VISIBLE);
+
             UTils.hideProgressDialog(MainActivity.pD);
-            Toast.makeText(getActivity(), getResources().getString(R.string.no_internet), Toast.LENGTH_SHORT).show();
+            UTils.show2OptionsDialoge(getActivity(), getResources().getString(R.string.no_internet),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            getChats();
+                        }
+                    }, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            getActivity().finish();
+                        }
+                    },"Try Again","Exit");
         }
     }
 }

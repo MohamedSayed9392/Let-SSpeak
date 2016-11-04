@@ -19,7 +19,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:padding="10dp">
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:layout_width="60dp"
@@ -28,14 +29,15 @@
             android:src="@drawable/avatar"
 
             app:riv_corner_radius="100dp"
-            android:layout_margin="10dp" />
+            android:layout_marginRight="10dp"
+            android:layout_gravity="top" />
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="10dp">
+            android:layout_gravity="top">
 
             <TextView
                 android:text="TextView"
@@ -44,15 +46,31 @@
                 android:id="@+id/txtName"
                 android:textColor="@android:color/black"
                 android:textStyle="normal|bold"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:gravity="left"
+                android:layout_weight="1" />
+
+            <TextView
+                android:text="hiiiiiiiiiiiiiiiiiii hiaiiiiiiiiiiiiiiiiii"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtLMessage"
+                android:layout_marginTop="5dp"
+                android:textSize="15sp"
+                android:gravity="left"
+                android:elevation="1dp"
+                android:layout_weight="1" />
 
             <TextView
                 android:text="TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/txtLMessage"
+                android:id="@+id/txtDate"
                 android:layout_marginTop="5dp"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:gravity="right"
+                android:layout_weight="1" />
+
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

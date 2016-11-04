@@ -73,16 +73,17 @@ public class Friends extends Fragment {
     RecyclerView rView;
     @ViewById
     FloatingActionButton fbAdd;
+
     @Click
-    void fbAdd(){
+    void fbAdd() {
         addDialog();
     }
 
-    public void addDialog(){
+    public void addDialog() {
         final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 
         alert.setTitle(R.string.add_friend);
-        LinearLayout linear=new LinearLayout(getActivity());
+        LinearLayout linear = new LinearLayout(getActivity());
         linear.setOrientation(LinearLayout.VERTICAL);
 
         final EditText editText = new EditText(getActivity());
@@ -94,68 +95,66 @@ public class Friends extends Fragment {
         linear.addView(editText);
         alert.setView(linear);
 
-        alert.setPositiveButton("Ok",new DialogInterface.OnClickListener()
-        {
-            public void onClick(DialogInterface dialog,int id)
-            {
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
-                UTils.showProgressDialog(getString(R.string.adding),getResources().getString(R.string.pleaseWait), MainActivity.pD);
+                UTils.showProgressDialog(getString(R.string.adding), getResources().getString(R.string.pleaseWait), MainActivity.pD);
                 ParseQuery query = ParseQuery.getQuery("_User");
-                query.whereEqualTo("objectId",editText.getText().toString());
+                query.whereEqualTo("objectId", editText.getText().toString());
                 query.getFirstInBackground(new GetCallback<ParseObject>() {
                     @Override
                     public void done(ParseObject object, ParseException e) {
-                        if(e==null) {
+                        if (e == null) {
                             if (object == null) {
-                                Log.d("Friends","1");
+                                Log.d("Friends", "1");
                                 UTils.hideProgressDialog(MainActivity.pD);
                                 Toast.makeText(getActivity(), "User Not Found", Toast.LENGTH_SHORT).show();
-                            }else{
+                            } else {
                                 ParseQuery query1 = ParseQuery.getQuery("Friend");
-                                query1.whereEqualTo("from",ParseUser.getCurrentUser());
-                                query1.whereEqualTo("to",object);
+                                query1.whereEqualTo("from", ParseUser.getCurrentUser());
+                                query1.whereEqualTo("to", object);
                                 query1.countInBackground(new CountCallback() {
                                     @Override
                                     public void done(int count, ParseException e) {
-                                        if(e==null){
-                                            if(count==0){
+                                        if (e == null) {
+                                            if (count == 0) {
 
                                                 ParseObject parseObject = new ParseObject("Friend");
-                                                parseObject.put("from",ParseUser.getCurrentUser());
-                                                parseObject.put("to",object);
+                                                parseObject.put("from", ParseUser.getCurrentUser());
+                                                parseObject.put("to", object);
                                                 parseObject.saveInBackground(new SaveCallback() {
                                                     @Override
                                                     public void done(ParseException e) {
-                                                        if(e==null){
+                                                        if (e == null) {
                                                             ParseObject parseObject1 = new ParseObject("Friend");
-                                                            parseObject1.put("to",ParseUser.getCurrentUser());
-                                                            parseObject1.put("from",object);
+                                                            parseObject1.put("to", ParseUser.getCurrentUser());
+                                                            parseObject1.put("from", object);
                                                             parseObject1.saveInBackground(new SaveCallback() {
                                                                 @Override
                                                                 public void done(ParseException e) {
-                                                                    if(e==null){
-                                                                        Log.d("Friends","4");
+                                                                    if (e == null) {
+                                                                        Log.d("Friends", "4");
                                                                         Toast.makeText(getActivity(), "Adding done", Toast.LENGTH_SHORT).show();
                                                                         getFriends();
                                                                         JSONObject messagee = new JSONObject();
                                                                         try {
-                                                                            messagee.put("image",object.getString("image"));
-                                                                            messagee.put("name",object.getString("full_name"));
-                                                                            messagee.put("objectId",object.getString(object.getObjectId()));
+                                                                            messagee.put("image", object.getString("image"));
+                                                                            messagee.put("name", object.getString("full_name"));
+                                                                            messagee.put("objectId", object.getString(object.getObjectId()));
                                                                         } catch (JSONException e1) {
                                                                             e1.printStackTrace();
                                                                         }
-                                                                        UTils.sendPush("newFriend",messagee.toString(),object.getString("device_id"));
-                                                                    }else{
-                                                                        Log.d("Friends","5");
+                                                                        UTils.sendPush("newFriend", messagee.toString(), object.getString("device_id"));
+                                                                    } else {
+                                                                        Log.d("Friends", "5");
                                                                         UTils.hideProgressDialog(MainActivity.pD);
                                                                         e.printStackTrace();
                                                                         Toast.makeText(getActivity(), getResources().getString(R.string.serverError), Toast.LENGTH_SHORT).show();
                                                                     }
                                                                 }
                                                             });
-                                                        }else{
-                                                            Log.d("Friends","5");
+                                                        } else {
+                                                            Log.d("Friends", "5");
                                                             UTils.hideProgressDialog(MainActivity.pD);
                                                             e.printStackTrace();
                                                             Toast.makeText(getActivity(), getResources().getString(R.string.serverError), Toast.LENGTH_SHORT).show();
@@ -163,11 +162,11 @@ public class Friends extends Fragment {
                                                     }
                                                 });
 
-                                            }else{
+                                            } else {
                                                 UTils.hideProgressDialog(MainActivity.pD);
                                                 Toast.makeText(getActivity(), R.string.already_friend, Toast.LENGTH_SHORT).show();
                                             }
-                                        }else{
+                                        } else {
                                             e.printStackTrace();
                                         }
                                     }
@@ -175,8 +174,8 @@ public class Friends extends Fragment {
 
 
                             }
-                        }else{
-                            Log.d("Friends","7");
+                        } else {
+                            Log.d("Friends", "7");
                             UTils.hideProgressDialog(MainActivity.pD);
                             e.printStackTrace();
                             Toast.makeText(getActivity(), getResources().getString(R.string.serverError), Toast.LENGTH_SHORT).show();
@@ -189,10 +188,8 @@ public class Friends extends Fragment {
             }
         });
 
-        alert.setNegativeButton("Cancel",new DialogInterface.OnClickListener()
-        {
-            public void onClick(DialogInterface dialog,int id)
-            {
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
             }
         });
@@ -206,55 +203,65 @@ public class Friends extends Fragment {
     List<FriendItem> list = new ArrayList<>();
 
     @AfterViews
-    void afterViews(){
-        friendsMainAdapter = new FriendsMainAdapter(list,getActivity());
+    void afterViews() {
+        friendsMainAdapter = new FriendsMainAdapter(list, getActivity());
         rView.setLayoutManager(new LinearLayoutManager(getActivity()));
         rView.setAdapter(friendsMainAdapter);
     }
 
-    public void getFriends(){
-        if(UTils.isOnline(getActivity())) {
-            UTils.showProgressDialog(getString(R.string.loading),getResources().getString(R.string.pleaseWait), MainActivity.pD);
+    public void getFriends() {
+        if (UTils.isOnline(getActivity())) {
+            UTils.showProgressDialog(getString(R.string.loading), getResources().getString(R.string.pleaseWait), MainActivity.pD);
 
-                ParseQuery query = ParseQuery.getQuery("Friend");
-                query.include("from");
-                query.include("to");
-                query.whereEqualTo("from",ParseUser.getCurrentUser());
-                query.findInBackground(new FindCallback<ParseObject>() {
-                    @Override
-                    public void done(List<ParseObject> objects, ParseException e) {
-                        if (e == null) {
-                            if(objects==null || objects.size()==0){
-                                UTils.hideProgressDialog(MainActivity.pD);
-                                Toast.makeText(getActivity(),"No Friends", Toast.LENGTH_SHORT).show();
-                            }else{
-                                friendsMainAdapter.removeFriends();
-                                for (ParseObject object : objects) {
-                                    friendsMainAdapter.addFriend(new FriendItem("",
-                                            object.getParseObject("to").getString("full_name"),
-                                            object.getParseObject("to").getObjectId()));
-                                }
-                                MainActivity.fbRefresh.setVisibility(View.GONE);
-                                UTils.hideProgressDialog(MainActivity.pD);
-                            }
-
-                        } else {
+            ParseQuery query = ParseQuery.getQuery("Friend");
+            query.addAscendingOrder("createdAt");
+            query.include("from");
+            query.include("to");
+            query.whereEqualTo("from", ParseUser.getCurrentUser());
+            query.findInBackground(new FindCallback<ParseObject>() {
+                @Override
+                public void done(List<ParseObject> objects, ParseException e) {
+                    if (e == null) {
+                        if (objects == null || objects.size() == 0) {
                             UTils.hideProgressDialog(MainActivity.pD);
-                            e.printStackTrace();
-                            Toast.makeText(getActivity(), getResources().getString(R.string.serverError), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "No Friends", Toast.LENGTH_SHORT).show();
+                        } else {
+                            friendsMainAdapter.removeFriends();
+                            for (ParseObject object : objects) {
+                                friendsMainAdapter.addFriend(new FriendItem("",
+                                        object.getParseObject("to").getString("full_name"),
+                                        object.getParseObject("to").getObjectId()));
+                            }
+                            UTils.hideProgressDialog(MainActivity.pD);
                         }
+
+                    } else {
+                        UTils.hideProgressDialog(MainActivity.pD);
+                        e.printStackTrace();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.serverError), Toast.LENGTH_SHORT).show();
                     }
+                }
 
-                });
+            });
 
-        }else{
-            MainActivity.fbRefresh.setVisibility(View.VISIBLE);
+        } else {
             UTils.hideProgressDialog(MainActivity.pD);
-            Toast.makeText(getActivity(), getResources().getString(R.string.no_internet), Toast.LENGTH_SHORT).show();
+            UTils.show2OptionsDialoge(getActivity(), getResources().getString(R.string.no_internet),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            getFriends();
+                        }
+                    }, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            getActivity().finish();
+                        }
+                    },"Try Again","Exit");
         }
 
     }
-
 
 
 }

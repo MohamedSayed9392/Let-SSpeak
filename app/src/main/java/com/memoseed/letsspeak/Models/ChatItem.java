@@ -8,13 +8,15 @@ import java.util.Date;
 
 public class ChatItem {
    String name,lastMessage,image,senderId,objectId;
+    Date date;
 
-    public ChatItem(String image, String lastMessage, String name,String senderId,String objectId) {
+    public ChatItem(String image, String lastMessage, String name,String senderId,String objectId,Date date) {
         this.image = image;
         this.lastMessage = lastMessage;
         this.name = name;
         this.senderId=senderId;
         this.objectId = objectId;
+        this.date = date;
     }
 
     public String getImage() {
@@ -55,5 +57,13 @@ public class ChatItem {
 
     public void setObjectId(String objectId) {
         this.objectId = objectId;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

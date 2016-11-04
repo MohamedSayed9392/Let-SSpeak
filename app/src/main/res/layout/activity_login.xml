@@ -33,11 +33,11 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
             android:ems="10"
             android:id="@+id/editPassL"
             android:hint="Password"
-            android:layout_margin="5dp" />
+            android:layout_margin="5dp"
+            android:inputType="textPassword" />
 
         <info.hoang8f.widget.FButton
             android:layout_width="150dp"
@@ -82,20 +82,20 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
             android:ems="10"
             android:id="@+id/editPassS"
             android:hint="Password"
-            android:layout_margin="5dp" />
+            android:layout_margin="5dp"
+            android:inputType="textPassword" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
             android:ems="10"
             android:id="@+id/editPassS2"
             android:hint="Password"
-            android:layout_margin="5dp" />
+            android:layout_margin="5dp"
+            android:inputType="textPassword" />
 
         <info.hoang8f.widget.FButton
             android:layout_width="150dp"

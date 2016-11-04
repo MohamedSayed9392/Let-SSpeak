@@ -20,6 +20,7 @@ import com.parse.ParseUser;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHolderItem> {
 
@@ -34,6 +35,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
 
         public ViewHolderItem(View itemView) {
             super(itemView);
+
             linOther = (LinearLayout) itemView.findViewById(R.id.linOther);
             linMe  = (LinearLayout) itemView.findViewById(R.id.linMe);
             txtDateOther  = (TextView) itemView.findViewById(R.id.txtDateOther);
@@ -47,6 +49,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
 
 
     public MessagesAdapter(List<MessageItem> listMessages, Context context) {
+        format.setTimeZone(TimeZone.getDefault());
         this.listMessages = listMessages;
         this.context = context;
     }

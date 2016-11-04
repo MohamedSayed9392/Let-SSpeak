@@ -17,17 +17,19 @@ import com.memoseed.letsspeak.Activities.MessagesActiviry_;
 import com.memoseed.letsspeak.Models.ChatItem;
 import com.memoseed.letsspeak.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 public class ChatsMainAdapter extends RecyclerView.Adapter<ChatsMainAdapter.ViewHolderItem> {
 
     public List<ChatItem> listChat = new ArrayList<>();
     Context context;
-
+    SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy - hh:mm aaa");
     public static class ViewHolderItem extends RecyclerView.ViewHolder {
 
-        TextView txtName,txtLMessage;
+        TextView txtName,txtLMessage,txtDate;
         ImageView imLine ;
         RoundedImageView image;
         LinearLayout linChat;
@@ -36,6 +38,7 @@ public class ChatsMainAdapter extends RecyclerView.Adapter<ChatsMainAdapter.View
         public ViewHolderItem(View itemView) {
             super(itemView);
             txtName = (TextView) itemView.findViewById(R.id.txtName);
+            txtDate = (TextView) itemView.findViewById(R.id.txtDate);
             txtLMessage = (TextView) itemView.findViewById(R.id.txtLMessage);
             imLine = (ImageView) itemView.findViewById(R.id.imLine);
             image = (RoundedImageView) itemView.findViewById(R.id.image);
@@ -47,6 +50,7 @@ public class ChatsMainAdapter extends RecyclerView.Adapter<ChatsMainAdapter.View
 
 
     public ChatsMainAdapter(List<ChatItem> listChat, Context context) {
+        format.setTimeZone(TimeZone.getDefault());
         this.listChat = listChat;
         this.context = context;
     }
@@ -91,6 +95,7 @@ public class ChatsMainAdapter extends RecyclerView.Adapter<ChatsMainAdapter.View
                         .putExtra("chatId",chatItem.getObjectId()));
             }
         });
+        holder.txtDate.setText(format.format(chatItem.getDate()));
       //  Glide.with(context).load(chatItem.getImage()).into(holder.image);
 
     }

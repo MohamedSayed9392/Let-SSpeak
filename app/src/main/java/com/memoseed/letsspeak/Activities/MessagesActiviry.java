@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -65,14 +66,14 @@ public class MessagesActiviry extends AppCompatActivity {
 
     List<String> users = new ArrayList<>();
     ProgressDialog pD;
-    boolean newChat = false;
     String chatId;
 
-    SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy - hh:mm a");
+    SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy - hh:mm aaa");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        format.setTimeZone(TimeZone.getDefault());
         pD = new ProgressDialog(this);
         senderId = getIntent().getExtras().getString("senderId");
         try {
@@ -94,12 +95,13 @@ public class MessagesActiviry extends AppCompatActivity {
             UTils.showProgressDialog(getResources().getString(R.string.loading), getResources().getString(R.string.pleaseWait), pD);
             ParseQuery query = ParseQuery.getQuery("_User");
             query.whereEqualTo("objectId", senderId);
+            query.addDescendingOrder("createdAt");
             query.getFirstInBackground(new GetCallback<ParseObject>() {
                 @Override
                 public void done(ParseObject object, ParseException e) {
                     if (e == null) {
                         parseUser = object;
-                        setTitle(object.getString("full_name"));
+                        setTitle(object.getString("full_name")+" ---- id: "+object.getObjectId());
 
                         ParseQuery query1 = ParseQuery.getQuery("Messages");
                         query1.whereContainsAll("users", users);
@@ -191,7 +193,7 @@ public class MessagesActiviry extends AppCompatActivity {
 
                     JSONObject messagee = new JSONObject();
                     try {
-                        messagee.put("date", format.format(parseObject.getCreatedAt()));
+                        messagee.put("date", parseObject.getCreatedAt().getTime());
                         messagee.put("message", parseObject.getString("message"));
                         messagee.put("senderIdd", ParseUser.getCurrentUser().getObjectId());
                         messagee.put("name", ParseUser.getCurrentUser().getString("full_name"));
@@ -317,16 +319,13 @@ public class MessagesActiviry extends AppCompatActivity {
                         if (gcmTitle.contains("newMessage")) {
 
                             try {
-                                String date = messageJSON.getString("date");
+                                long date = messageJSON.getLong("date");
                                 String message = messageJSON.getString("message");
                                 String senderIdd = messageJSON.getString("senderIdd");
                                 String name = messageJSON.getString("name");
                                 if (senderId.matches(senderIdd)) {
-                                    try {
-                                        messagesAdapter.addMessage(new MessageItem(format.parse(date), message, senderIdd, name));
-                                    } catch (java.text.ParseException e) {
-                                        e.printStackTrace();
-                                    }
+                                        messagesAdapter.addMessage(new MessageItem(new Date(date), message, senderIdd, name));
+
                                     Intent resultIntent = new Intent(context, MessagesActiviry_.class)
                                             .putExtra("senderId", senderIdd);
                                     PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -339,13 +338,14 @@ public class MessagesActiviry extends AppCompatActivity {
                                             .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                                             .setContentIntent(resultPendingIntent)
                                             .setAutoCancel(true)
+                                            .setGroup("newMessage")
                                             .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
 
                                     Notification notification = builder.build();
                                     NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
 
-                                    nm.notify(UTils.createID(), notification);
+                                    nm.notify(0, notification);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

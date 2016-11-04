@@ -139,5 +139,14 @@ public class UTils {
         return id;
     }
 
+    public static void show2OptionsDialoge(Activity activity, String msg, DialogInterface.OnClickListener listenerPos, DialogInterface.OnClickListener listenerNeg, String txtbtnP, String txtbtnN) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setMessage(msg)
+                .setCancelable(false)
+                .setPositiveButton(txtbtnP, listenerPos)
+                .setNegativeButton(txtbtnN, listenerNeg);
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
 
 }

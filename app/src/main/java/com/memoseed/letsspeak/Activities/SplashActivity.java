@@ -1,6 +1,7 @@
 package com.memoseed.letsspeak.Activities;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,20 +46,34 @@ public class SplashActivity extends Activity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(UTils.isOnline(getApplicationContext())) {
-                    if (ParseUser.getCurrentUser() != null) {
-                        startActivity(new Intent(SplashActivity.this, MainActivity_.class));
-                        finish();
-                    } else {
-                        startActivity(new Intent(SplashActivity.this, LoginActivity_.class));
-                        finish();
-                    }
-                }else {
-                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_internet), Toast.LENGTH_SHORT);
-                    finish();
-                }
-
+                checkUser();
             }
         },5000);
+    }
+
+    private void checkUser(){
+        if(UTils.isOnline(getApplicationContext())) {
+            if (ParseUser.getCurrentUser() != null) {
+                startActivity(new Intent(SplashActivity.this, MainActivity_.class));
+                finish();
+            } else {
+                startActivity(new Intent(SplashActivity.this, LoginActivity_.class));
+                finish();
+            }
+        }else {
+            UTils.show2OptionsDialoge(SplashActivity.this, getResources().getString(R.string.no_internet),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            checkUser();
+                        }
+                    }, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    },"Try Again","Exit");
+        }
     }
 }

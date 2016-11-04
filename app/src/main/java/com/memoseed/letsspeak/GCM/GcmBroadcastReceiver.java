@@ -75,7 +75,7 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
                     if(MessagesActiviry.gcmBroadcastReceiver==null) {
                         String senderIdd = null, date, message = null, name = null;
                         try {
-                            date = messageJSON.getString("date");
+                          //  date = messageJSON.getString("date");
                             message = messageJSON.getString("message");
                             senderIdd = messageJSON.getString("senderIdd");
                             name = messageJSON.getString("name");
@@ -93,12 +93,13 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
                                 .setContentTitle(name).setContentText(message)
                                 .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                                 .setContentIntent(resultPendingIntent)
+                                .setGroup("newMessage")
                                 .setAutoCancel(true)
                                 .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
 
                         Notification notification = builder.build();
                         NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                        nm.notify(UTils.createID(), notification);
+                        nm.notify(0, notification);
                     }
 
                 }else if (title.contains("newFriend")) {
@@ -120,11 +121,12 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
                                     .setStyle(new NotificationCompat.BigTextStyle().bigText(name))
                                     .setContentIntent(resultPendingIntent)
                                     .setAutoCancel(true)
+                                    .setGroup("newFriend")
                                     .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
 
                             Notification notification = builder.build();
                             NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                            nm.notify(UTils.createID(), notification);
+                            nm.notify(1, notification);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
