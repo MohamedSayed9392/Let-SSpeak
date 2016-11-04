@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    android:layout_marginTop="10dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:id="@+id/linOther"
+        android:visibility="visible">
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtDateOther"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="2dp"
+            android:visibility="gone" />
+
+        <view
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            class="com.flyco.roundview.RoundTextView"
+            android:id="@+id/txtMessageOther"
+            app:rv_strokeColor="@color/colorAccent"
+            app:rv_strokeWidth="2dp"
+            app:rv_cornerRadius="10dp"
+            android:text="Hello From The"
+            android:padding="10dp"
+            android:layout_gravity="left" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:id="@+id/linMe"
+        android:layout_gravity="right">
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtDateMe"
+            android:layout_marginBottom="2dp"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="right"
+            android:visibility="gone" />
+
+        <view
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            class="com.flyco.roundview.RoundTextView"
+            android:id="@+id/txtMessageMe"
+            app:rv_strokeColor="@color/colorPrimary"
+            app:rv_strokeWidth="2dp"
+            app:rv_cornerRadius="10dp"
+            android:text="Hello From The"
+            android:padding="10dp"
+            android:layout_gravity="right" />
+    </LinearLayout>
+</LinearLayout>
