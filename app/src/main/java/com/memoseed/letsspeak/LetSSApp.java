@@ -13,7 +13,10 @@ public class LetSSApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        Parse.initialize(this, "M9hBizYlpFuOdPUGn9m3nksuUWNia2M7g7K37aBe", "kMw5iD0WzvSx25cdmd2VNa5zgsKrGKrGddGeeeMW");
+        Parse.initialize(new Parse.Configuration.Builder(this)
+                .applicationId("i64m8Ro7ezLQMPQZPbUG16TGb9D3Kwev1gr4cwCk")
+                .server("https://parseapi.back4app.com")
+                .clientKey("sVBgq1NaFarfFG6YYTbYTtKyj1gKNLgxIWtNnao8").build());
         ParseInstallation.getCurrentInstallation().saveInBackground();
     }
 
